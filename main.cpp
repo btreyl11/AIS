@@ -4,54 +4,29 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-const string mainFile = "Directory.txt";
+#include "account.h"
 
-struct Account
-{
-	string ID;
-	string username;
-	string password;
-};
+using namespace std;
+const string mainFile = "Directory.dat";
+
 vector <Account> list;
 int cntLine()
 {
-	ifstream inFile("Directory.txt");
+	ifstream inFile(mainFile.c_str());
 	int n = count(istreambuf_iterator<char>(inFile), istreambuf_iterator<char>(), '\n');
 	return n;
 }
-void accOutput(string ID);
+void listSearch();
 void initPIS();
-void accInput(Account user);
 void viewAll();
 void HelpMenu();
 bool accExists(string ID);
-void accChange(string ID);
-void accDelete(string ID);
 void updatePIS();
 int passGet();
 void creatPin();
 void executePIS();
 
-int main()
-{
-	bool grantaccess = false;
-	int corPin = passGet();
-	int pin;
-	while (grantaccess == false)
-	{
-		corPin = passGet();
-		cout<<"Please input your 4-digit PIN: ";
-		cin>> pin;
-		if (pin == corPin){
-			executePIS();
-			grantaccess = true;
-		}
-		else{
-			cout<<"PIN incorrect! ";
-		}
-	}	
-}
+
 int passGet()
 {
 	int p;
@@ -73,11 +48,12 @@ void creatPin(){
 	 	creatPin();
 	}
 }
-void executePIS()
+int main()
 {
 	char x;
 	initPIS();
 	Account me;
+	string input_string
 	bool done = false;
 	cout<<"Welcome to the Password Information Storage(PIS)  BETA terminal! What would you like  to do today?"<<endl;
     while (done == false){
@@ -89,19 +65,22 @@ void executePIS()
 	    //INPUT INFORMATION
 	    else if (x == 'i'){
         cout<<"Please input the name of the account you would like to create: ";
-        cin >> me.ID;
+        cin >> input_string;
+        me.setID(input_string);
         	//checking for the account account
-            if (!accExists(me.ID)){
+            if (!accExists(me.getID())){
                 cout<<"Input a Username: ";
-                cin>> me.username;
+                cin>> input_string;
+                me.setUser(input_string);
                 cout<<"\nInput a Password: ";
-                cin>>me.password;
+                cin>>input_string;
+                me.setUser(input_string);
 				//create account
-                accInput(me);
+                list.push_back(me);
                 cout<<"Account info stored! Would you like to read it?(Y or N)\n";
                 cin>> x;
                 if (x == 'Y'|| x=='y'){
-                    accOutput(me.ID);
+                    listSearch(me);
                 }
             }
             //account already exists
@@ -109,27 +88,27 @@ void executePIS()
 				cout<<"Account info already exists in storage! Would you like to read it?(Y or N)\n";
                 cin>> x;
                 if (x == 'Y'|| x=='y'){
-                    accOutput(me.ID);
+                    listSearch(me);
                 }
             }
     }
 	    //OUTPUT INFORMATION
 	    else if (x == 'o'){
         cout<< "Please input an account name: ";
-        cin>>me.ID;
+        cin>>me.getID();
 
         //checking for
-        if (accExists(me.ID))
+        if (accExists(me.getID()))
         {
-            cout << "\n Your Account information for "<<me.ID<<": \n";
-            accOutput(me.ID);
+            cout << "\n Your Account information for "<<me.getID()<<": \n";
+            accOutput(me.getID());
             cout<<"Anything else?";
 
         }
         //if account is false create it
         else{
 
-            cout<<"Account does not exist! Would you like to create "<<me.ID<<"?(Y or N)";
+            cout<<"Account does not exist! Would you like to create "<<me.getID()<<"?(Y or N)";
             cin>> x;
              if (x == 'Y'||x == 'y'){
                cout<< "\nPlease insert a Username: ";
@@ -143,8 +122,8 @@ void executePIS()
     }
 	    else if (x == 'd'){
 	        cout<<"Insert the name of the account you want to delete: ";
-	        cin>>me.ID;
-	        if (!accExists(me.ID))
+	        cin>>me.getID();
+	        if (!accExists(me.getID()))
 	        {
 	            cout<<"I'm sorry but, this account does not exist.\n \nMain Menu\n";
 	        }
@@ -157,28 +136,28 @@ void executePIS()
 	                cin>>x;
 	                if (x == 'y'||x=='Y')
 	                {
-	                    accDelete(me.ID);
+	                    accDelete(me.getID());
 	                }
 	            }
 	            else if (x == 'y' || x == 'Y')
 	            {
-	            	accOutput(me.ID);
+	            	accOutput(me.getID());
 	            	cout<<endl<< "Are you sure you want to DELETE this account?(Y or N)"<<endl;
 	                cin>>x;
 	                if (x == 'y'||x=='Y')
 	                {
-	                    accDelete(me.ID);
+	                    accDelete(me.getID());
 	                }	
 	            }
 	        }
 	    }
 	    else if(x == 'c'){
 	    	cout<<"Account ID: ";
-	    	cin>>me.ID;
-	    	if(accExists(me.ID)){
+	    	cin>>me.getID();
+	    	if(accExists(me.getID())){
 	    		cout<<"Old Information"<<endl;
-	    		accOutput(me.ID);
-	    		accChange(me.ID);
+	    		accOutput(me.getID());
+	    		accChange(me.getID());
 	    	}
 	    }
 	    else if (x == 'q'){
@@ -215,16 +194,11 @@ void accOutput(string ID)
 		}
 	}
 }
-void accInput(Account user)
-{
-	list.push_back(user);
-	updatePIS();
-}
 bool accExists(string ID)
 {
 	for (int i = 0; i < list.size(); i++)
 	{
-		if(list[i].ID == ID){
+		if(list[i].g == ID){
 			return true;
 		}
 	}
@@ -267,6 +241,15 @@ void accDelete(string ID)
 		}
 	}
 }
+void listSearch(Account user)
+{
+	for(int i =0; i < list.size(); i++){
+    	if (list[i].getID() == user.getID()){
+		    list[i].accOutput();
+      		break;
+       	}
+    }
+}
 void accChange(string ID){
 	accDelete(ID);
 	Account a;
@@ -293,7 +276,7 @@ void initPIS()
 }
 void updatePIS()
 {
-	ofstream inFile ("Directory.txt");
+	ofstream inFile (mainFile.c_str());
 	for (int i = 0; i < list.size(); i++){
 	inFile<<list[i].ID<<" "<<list[i].username<<" "<<list[i].password<<endl;
 	}

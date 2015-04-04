@@ -5,7 +5,7 @@
 #include <string>
 
 using namespace std;
-const string mainFile = "Directory.txt";
+const string mainFile = ".directoryAIS";
 
 struct Account
 {
@@ -16,7 +16,7 @@ struct Account
 vector <Account> list;
 int cntLine()
 {
-	ifstream inFile("Directory.txt");
+	ifstream inFile(mainFile.c_str());
 	int n = count(istreambuf_iterator<char>(inFile), istreambuf_iterator<char>(), '\n');
 	return n;
 }
@@ -35,51 +35,11 @@ void executePIS();
 
 int main()
 {
-	bool grantaccess = false;
-	int corPin = passGet();
-	int pin;
-	while (grantaccess == false)
-	{
-		corPin = passGet();
-		cout<<"Please input your 4-digit PIN: ";
-		cin>> pin;
-		if (pin == corPin){
-			executePIS();
-			grantaccess = true;
-		}
-		else{
-			cout<<"PIN incorrect! ";
-		}
-	}	
-}
-int passGet()
-{
-	int p;
-	ifstream passFile("pass.txt");
-	passFile >> p;
-	return p;
-}
-void creatPin(){
-	cout<<"Please insert a 4-digit number as a PIN number: ";
-	string p;
-	cin >> p;
-	if (p.length() == 4){
-	ofstream inFile("pass.txt");
-	inFile << p;
-	cout<<"NEW PIN MADE!"<< endl;
-	}
-	else{
-		cout<<"The PIN must be 4-digits! ";
-	 	creatPin();
-	}
-}
-void executePIS()
-{
 	char x;
 	initPIS();
 	Account me;
 	bool done = false;
-	cout<<"Welcome to the Password Information Storage(PIS)  BETA terminal! What would you like  to do today?"<<endl;
+	cout<<"Welcome to the Account  Information Storage(AIS)  BETA terminal! What would you like  to do today?"<<endl;
     while (done == false){
 	    cin>>x;
 	    //HELP
@@ -168,7 +128,7 @@ void executePIS()
 	                if (x == 'y'||x=='Y')
 	                {
 	                    accDelete(me.ID);
-	                }	
+	                }
 	            }
 	        }
 	    }
@@ -182,24 +142,14 @@ void executePIS()
 	    	}
 	    }
 	    else if (x == 'q'){
-	        cout<< "Are you sure?(Y or N)";
-	        cin>> x;
-	            if (x == 'y' ||x == 'Y') {
 	                done = true;
-	            }
-	            else{
-	                cout<<"OK";
-	            }
 	    }
 	    else if (x == 'a'){
 	    	cout<< "\nAll Accounts: \n\n";
 	    	viewAll();
 	    }
-	    else if(x == 'p'){
-	    	creatPin();
-	    }
 	    else{
-	        cout<<"Not a valid command";
+	        cerr<<"Not a valid command";
 	    }
 	}
 }
@@ -228,7 +178,7 @@ bool accExists(string ID)
 			return true;
 		}
 	}
-	return false;	
+	return false;
 }
 void viewAll()
 {
@@ -258,12 +208,12 @@ void accDelete(string ID)
 	{
 		if(list[i].ID == ID){
 			for (int j = i + 1; j < list.size(); j++){
-			 list[j-1] = list[j];	
+			 list[j-1] = list[j];
 			}
 			list.pop_back();
 			updatePIS();
 			break;
-			
+
 		}
 	}
 }
@@ -279,7 +229,7 @@ void accChange(string ID){
 }
 void initPIS()
 {
-	ifstream inFile ("Directory.txt");
+	ifstream inFile (mainFile.c_str());
 	Account user;
 	for (int i = 0; i< cntLine(); i++)
 	{
@@ -287,13 +237,13 @@ void initPIS()
 		inFile>>user.username;
 		inFile>>user.password;
 		list.push_back(user);
-		
+
 	}
 	inFile.close();
 }
 void updatePIS()
 {
-	ofstream inFile ("Directory.txt");
+	ofstream inFile(mainFile.c_str());
 	for (int i = 0; i < list.size(); i++){
 	inFile<<list[i].ID<<" "<<list[i].username<<" "<<list[i].password<<endl;
 	}

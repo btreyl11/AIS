@@ -9,24 +9,19 @@ trigger various functions:
 
   'i' =>  INPUT ACCOUNT INFORMATION
 
-    This will cause the program to ask the user for an ID (which should contain
-   a string of which is UNIQUE to each account added), a username, and a password
-   in that order.
+    This will cause the program to ask the user for an ID (which should contain a string of which is UNIQUE to each account added), a username, and a password in that order.
 
   'o' => OUTPUT ACCOUNT INFORMATION
 
-    The program will prompt the user for the ID(defined above), and then print out
-   the desired information from that account.
+    The program will prompt the user for the ID(defined above), and then print out the desired information from that account.
 
   'd' => DELETE ACCOUNT INFORMATION
 
-    The program will, again ask the user for the ID of the account, and return true
-   if the account is deleted(i.e if it even exists to begin with).
+    The program will, again ask the user for the ID of the account, and return true if the account is deleted(i.e if it even exists to begin with).
 
   'h' => TO VIEW THE HELP MENU
 
-    The program will print out the list of commands available for this program (similarly
-   to what you see here).
+    The program will print out the list of commands available for this program (similarly to what you see here).
 
   'a' => OUTPUT ALL ACCOUNT INFORMATION
 
